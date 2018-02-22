@@ -1,4 +1,5 @@
 #include "field.hpp"
+#include <iostream>
 
 
 
@@ -14,7 +15,7 @@ void Field::SetValue (int v){
   this->value = v;
 }
 
-bool Field::HasNeighbour (Direction dir) const {
+bool Field::HasNeighbour (const Direction dir) const {
   switch (dir){
     case Direction::North:
       return northNeighbour != nullptr;
@@ -29,7 +30,7 @@ bool Field::HasNeighbour (Direction dir) const {
   }
 }
 
-Field* Field::GetNeighbour (Direction dir) const {
+Field* Field::GetNeighbour (const Direction dir) const {
   switch (dir){
     case Direction::North:
       return northNeighbour;
@@ -44,7 +45,9 @@ Field* Field::GetNeighbour (Direction dir) const {
   }
 }
 
-void Field::SetNeightbour (Direction dir, Field* neighbour) {
+void Field::SetNeightbour (const Direction dir, Field* neighbour) {
+  if (neighbour == nullptr || neighbour == this)
+    throw std::runtime_error ("wrong neighbour");
   switch (dir){
     case Direction::North:
       this->westNeighbour = neighbour;
@@ -65,7 +68,7 @@ void Field::SetNeightbour (Direction dir, Field* neighbour) {
 
 
 
-void Field::MergeFrom (Direction dir) {
+void Field::MergeFrom (const Direction dir) {
   Field* nextNotEmptyNeighbour = GetNeighbour (dir);
   while (nextNotEmptyNeighbour != nullptr) {
     if (nextNotEmptyNeighbour->value == 0) {

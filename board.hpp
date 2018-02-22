@@ -10,10 +10,10 @@ public:
   Field* GetField (int i, int j);
   int GetFieldValue (int i, int j) const;
   void Print (void) const;
-  void MoveTo (Direction dir);
+  void MoveTo (const Direction dir);
 private:
   bool AddRandomElem (void);
-  void MergeTo (Direction dir);
+  void MergeTo (const Direction dir);
 };
 
 

@@ -15,9 +15,9 @@ public:
   int GetValue (void) const;
   void SetValue (int v);
 
-  bool HasNeighbour (Direction dir) const;
-  Field* GetNeighbour (Direction dir) const;
-  void SetNeightbour (Direction dir, Field* neighbour);
+  bool HasNeighbour (const Direction dir) const;
+  Field* GetNeighbour (const Direction dir) const;
+  void SetNeightbour (const Direction dir, Field* neighbour);
 
-  void MergeFrom (Direction dir);
+  void MergeFrom (const Direction dir);
 };

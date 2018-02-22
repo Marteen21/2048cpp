@@ -71,7 +71,7 @@ void Board::MoveTo (Direction dir) {
   AddRandomElem ();
 }
 
-Direction GetOppositeDirection (Direction dir) {
+Direction GetOppositeDirection (const Direction dir) {
   switch (dir){
     case Direction::North:
       return Direction::South;
@@ -86,7 +86,7 @@ Direction GetOppositeDirection (Direction dir) {
   }
 }
 
-void Board::MergeTo (Direction dir) {
+void Board::MergeTo (const Direction dir) {
   bool verticalMerge = dir == Direction::North || Direction::South;
   bool positiveDirection = dir == Direction::South || Direction::East;
   int x,y;

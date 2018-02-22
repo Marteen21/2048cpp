@@ -20,6 +20,8 @@ int main (){
       case 'd':
         myBoard.MoveTo (Direction::West);
         break;
+      default:
+        break;
     }
   }
   return 0;
