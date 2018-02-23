@@ -10,9 +10,13 @@ public:
   Field* GetField (int i, int j);
   int GetFieldValue (int i, int j) const;
   void Print (void) const;
+  void PrintDebug(void) const;
   void MoveTo (const Direction dir);
+  void FillDebug (void);
+  void Fill(int data[16]);
 private:
   bool AddRandomElem (void);
+  void SlideTo(const Direction dir);
   void MergeTo (const Direction dir);
 };
 

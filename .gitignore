@@ -1,1 +1,6 @@
 out/
+debug/
+2048Test/Debug/
+*.vcxproj
+*.sln
+.vs

@@ -49,6 +49,24 @@ void Board::Print () const {
   }
 }
 
+void Board::PrintDebug(void) const
+{
+	std::cout << std::endl;
+	for (int i = 0; i < 16; i++) {
+		std::cout << "         " << this->fields[i]->GetNeighbour(Direction::North) << std::endl;
+		std::cout << this->fields[i]->GetNeighbour(Direction::West) << " " << this->fields[i] << " " << this->fields[i]->GetNeighbour(Direction::East) << std::endl;
+		std::cout << "         " << this->fields[i]->GetNeighbour(Direction::South) << std::endl << std::endl;
+
+	}
+	std::cout << std::endl;
+	for (int i = 0; i < 16; i++) {
+		std::cout << "  " << this->fields[i]->GetNeighbour(Direction::North)->GetValue () << std::endl;
+		std::cout << this->fields[i]->GetNeighbour(Direction::West)->GetValue() << " " << this->fields[i]->GetValue() << " " << this->fields[i]->GetNeighbour(Direction::East)->GetValue() << std::endl;
+		std::cout << "  " << this->fields[i]->GetNeighbour(Direction::South)->GetValue() << std::endl << std::endl;
+
+	}
+}
+
 bool Board::AddRandomElem () {
   std::vector<int> indices;
   for (int i = 0; i<16; i++) {
@@ -58,12 +76,25 @@ bool Board::AddRandomElem () {
   }
   if (indices.size ()> 0) {
     int r = *select_randomly(indices.begin(), indices.end());
-    this->fields[indices[r]]->SetValue (1);
+    this->fields[r]->SetValue (1);
     return true;
   } else {
     throw std::runtime_error ("game over");
     return false;
   }
+}
+
+void Board::FillDebug (void) {
+	for (int i = 0; i<16; i++) {
+		this->fields[i]->SetValue(i);
+	}
+}
+
+void Board::Fill(int data[16])
+{
+	for (int i = 0; i < 16; i++) {
+		this->fields[i]->SetValue(data[i]);
+	}
 }
 
 void Board::MoveTo (Direction dir) {
@@ -86,23 +117,42 @@ Direction GetOppositeDirection (const Direction dir) {
   }
 }
 
+void Board::SlideTo(const Direction dir) {
+	bool positiveDirection = dir == Direction::South || dir == Direction::East;
+	for (int i = 0; i < 16; i++) {
+		Field* const field = this->fields[i];
+		if (field->GetValue () == 0) {
+			Field* nextNeighbour = field->GetNeighbour(GetOppositeDirection(dir));
+			while (nextNeighbour != nullptr && nextNeighbour->GetValue() == 0) {
+				nextNeighbour = nextNeighbour->GetNeighbour(GetOppositeDirection(dir));
+			}
+			if (nextNeighbour != nullptr) {
+				field->SetValue(nextNeighbour->GetValue());
+				nextNeighbour->SetValue(0);
+			}
+		}
+	}
+}
+
+
 void Board::MergeTo (const Direction dir) {
-  bool verticalMerge = dir == Direction::North || Direction::South;
-  bool positiveDirection = dir == Direction::South || Direction::East;
+	SlideTo(dir);
+  bool verticalMerge = dir == Direction::North || dir == Direction::South;
+  bool positiveDirection = dir == Direction::South || dir == Direction::East;
   int x,y;
-  if (positiveDirection) {
+  if (!positiveDirection) {
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 4; j++) {
-        x = verticalMerge ? i : j;
-        y = verticalMerge ? j : i;
+        x = verticalMerge ? j : i;
+        y = verticalMerge ? i : j;
         GetField(x,y)->MergeFrom(GetOppositeDirection(dir));
       }
     }
   } else {
-    for (int i = 3; i > 0; i--) {
-      for (int j = 3; j > 0; j--) {
-        x = verticalMerge ? i : j;
-        y = verticalMerge ? j : i;
+    for (int i = 3; i >= 0; i--) {
+      for (int j = 3; j >= 0; j--) {
+        x = verticalMerge ? j : i;
+        y = verticalMerge ? i : j;
         GetField(x,y)->MergeFrom(GetOppositeDirection(dir));
       }
     }

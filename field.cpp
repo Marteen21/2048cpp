@@ -5,10 +5,17 @@
 
 Field::Field (){
   this->value = 0;
+  this->northNeighbour = nullptr;
+  this->eastNeighbour = nullptr;
+  this->southNeighbour = nullptr;
+  this->westNeighbour = nullptr;
 }
 
 int Field::GetValue () const{
-  return this->value;
+	if (this != nullptr)
+		return this->value;
+	else
+		return -1;
 }
 
 void Field::SetValue (int v){
@@ -50,13 +57,13 @@ void Field::SetNeightbour (const Direction dir, Field* neighbour) {
     throw std::runtime_error ("wrong neighbour");
   switch (dir){
     case Direction::North:
-      this->westNeighbour = neighbour;
+      this->northNeighbour = neighbour;
       break;
     case Direction::East:
-      this->westNeighbour = neighbour;
+      this->eastNeighbour = neighbour;
       break;
     case Direction::South:
-      this->westNeighbour = neighbour;
+      this->southNeighbour = neighbour;
       break;
     case Direction::West:
       this->westNeighbour = neighbour;
@@ -73,7 +80,10 @@ void Field::MergeFrom (const Direction dir) {
   while (nextNotEmptyNeighbour != nullptr) {
     if (nextNotEmptyNeighbour->value == 0) {
       nextNotEmptyNeighbour = nextNotEmptyNeighbour->GetNeighbour (dir);
-    } else if (nextNotEmptyNeighbour->value == this->value) {
+	} else if (this->value == 0) {
+		this->value = nextNotEmptyNeighbour->value;
+		nextNotEmptyNeighbour->value = 0;
+	} else if (nextNotEmptyNeighbour->value == this->value) {
       this->value++;
       nextNotEmptyNeighbour->value = 0;
       return;
